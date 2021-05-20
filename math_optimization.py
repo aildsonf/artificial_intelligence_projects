@@ -17,8 +17,12 @@ def generate_population(size: int, genome_length: int) -> Population:
     return [generate_genome(genome_length) for _ in range(size)]
 
 
-# def fitness_score(genome: Genome) -> int:
-# TO-DO
+def fitness(genome: Genome, num: int) -> Tuple[Genome, int]:
+    genome_number = convert_binary(genome)
+    perfect_number = num
+    distance = abs(genome_number - perfect_number)
+    fitness_score = int(100 - (distance * 100)/(perfect_number))
+    return genome, fitness_score
 
 
 # def natural_selection(population: Population, )
@@ -37,12 +41,12 @@ def crossover(gene_a: Genome, gene_b: Genome) -> Tuple[Genome, Genome]:
         gene_b[0:partition] + gene_a[partition:]
 
 
-def mutation(genome: Genome, num: int = 1, p: float = 0.5) -> Genome:
+def mutation(genome: Genome, num: int = 1, probability: float = 0.5) -> Genome:
     for _ in range(num):
         # gets a random position based on genome length
         index = randrange(len(genome))
         genome[index] = genome[index] if random(
-        ) > p else abs(genome[index] - 1)
+        ) > probability else abs(genome[index] - 1)
     return genome
 
 
@@ -56,7 +60,9 @@ def convert_binary(genome: Genome) -> int:
 
 
 # tests
-print(crossover([1, 0, 0, 1, 1], [0, 0, 1, 0, 0]))  # crossover test
-print(convert_binary([1, 0, 0]))  # binary to decimal test (0b111 = 4)
-print(generate_population(10, 2))  # population generation (size = 2) test
-print(mutation([]))
+# print(crossover([1, 0, 0, 1, 1], [0, 0, 1, 0, 0]))  # crossover test
+# print(convert_binary([1, 0, 0]))  # binary to decimal test (0b111 = 4)
+# print(generate_population(10, 2))  # population generation (size = 2) test
+print(fitness([1, 1, 1], 7))
+print(fitness([1, 1, 1], 6))
+print(fitness([1, 1, 1], 5))

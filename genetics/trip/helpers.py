@@ -3,16 +3,22 @@ import time
 
 flight_data = open('flights.txt')
 
+# POA - Porto Alegre, GYN - Goiania, CNF - Belo Horizonte,
+# FLN - Floripa, GIG - Rio de Janeiro, CWB - Curitiba
 friends = [('Aildson', 'POA'), ('Thiago', 'GYN'), ('George', 'CNF'),
            ('Julian', 'FLN'), ('Péricles', 'GIG'), ('Maigan', 'CWB')]
+
+# qty. flights * (qty. friends * 2)
+# 2 = 1 flight to destination + 1 flight from destination
 domain = [(0, 9)] * (len(friends) * 2)
 
 destination = 'REC'
-flights = {}
+
+flights = {}  # flight dictionary
 
 for flight in flight_data:
     origin, destination, departure, arrival, price = flight.split(',')
-    flights.setdefault((origin, destination), [])
+    flights.setdefault((origin, destination), [])  # () => (key, value)
     flights[(origin, destination)].append((departure, arrival, int(price)))
 
 

@@ -18,7 +18,7 @@ def mutation(domain, reference, solution):
     i = random.randint(0, len(domain) - 1)  # position to change the value
     mutant = solution
 
-    if random.random() < 0.5:  # probability to suffer mutation
+    if random.random() < 0.5:  # probability to suffer mutation (sum or sub)
         if solution[i] != domain[i][0]:
             mutant = solution[0:i] + [solution[i] - reference] + solution[i + 1:]
         else:
@@ -35,8 +35,8 @@ def crossover(domain, parent_1, parent_2):
     return offspring
 
 
-def evolution(domain, population_size=1000, reference=1,
-              mutation_rate=0.1, elitism=0.2, generations=10000):
+def evolution(domain, cost_function, population_size=10, reference=1,
+              mutation_rate=0.1, elitism=0.2, generations=100):
     population = []
 
     # build first population
@@ -54,9 +54,9 @@ def evolution(domain, population_size=1000, reference=1,
                          for individual in population]
         solution_cost.sort()
 
-        fittest_individuals = [individual for (
-            _, individual) in solution_cost]
+        fittest_individuals = [individual for (_, individual) in solution_cost]
 
+        # guarantee elitism of n%
         population = fittest_individuals[0:elitism_size]
 
         while len(population) < population_size:
@@ -68,7 +68,7 @@ def evolution(domain, population_size=1000, reference=1,
                 population.append(mutant)
             else:
                 chosen_parents = random.choices(
-                    # natural selection
+                    # roulette to select parents for crossover
                     fittest_individuals,
                     weights=[cost for (cost, _) in solution_cost],
                     k=2
@@ -81,7 +81,7 @@ def evolution(domain, population_size=1000, reference=1,
     return solution_cost[0][1]
 
 
-best_solution = evolution(domain)
+best_solution = evolution(domain, cost_function)
 best_solution_cost = cost_function(best_solution)
 
 build_schedule(best_solution)
